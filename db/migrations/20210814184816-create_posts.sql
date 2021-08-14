@@ -4,7 +4,7 @@ create table if not exists posts (
   user_id uuid not null,
   text text not null,
   created_at timestamp not null,
-  foreign key (user_id) references users(id)
+  foreign key (user_id) references users(id) on delete cascade on update cascade
 );
 
 create index on posts (user_id);

@@ -1,4 +1,6 @@
 -- +migrate Up
+create extension if not exists "pgcrypto";
+
 create table if not exists users (
   id uuid primary key not null,
   email varchar(191) not null unique,
