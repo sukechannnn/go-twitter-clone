@@ -1,0 +1,6 @@
+#!/bin/sh
+
+psql -l -p 15432 -h localhost -U postgres | grep go-twitter-clone-dev
+if [ $? -ne 0 ]; then
+  createdb -p 15432 -h localhost -U postgres -e go-twitter-clone-dev
+fi
