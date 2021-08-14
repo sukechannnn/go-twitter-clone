@@ -1,0 +1,4 @@
+#!/bin/sh -eu
+
+psql -h localhost -p 15432 -U postgres -d go-twitter-clone-dev -f db/seed/users.sql
+psql -h localhost -p 15432 -U postgres -d go-twitter-clone-dev -f db/seed/posts.sql
