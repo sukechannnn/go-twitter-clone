@@ -1,4 +1,4 @@
 development:
   dialect: postgres
   datasource: host=localhost port=15432 dbname=go-twitter-clone-dev user=postgres sslmode=disable
-  dir: migrations
+  dir: db/migrations

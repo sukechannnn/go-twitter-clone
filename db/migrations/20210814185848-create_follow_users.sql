@@ -1,6 +1,6 @@
 -- +migrate Up
 create table if not exists follow_users (
-  id uuid not null primary key,
+  id uuid primary key not null,
   user_id uuid not null,
   follower_id uuid not null,
   foreign key (user_id) references users(id),

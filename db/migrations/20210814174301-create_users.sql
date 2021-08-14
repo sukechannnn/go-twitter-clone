@@ -1,6 +1,6 @@
 -- +migrate Up
 create table if not exists users (
-  id uuid not null primary key,
+  id uuid primary key not null,
   email varchar(191) not null unique,
   encrypted_password varchar(191) not null,
   screen_id varchar(191),
