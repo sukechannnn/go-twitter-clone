@@ -56,3 +56,17 @@ func FindById(db *gorm.DB, id string) (*User, error) {
 		ScreenName: user.ScreenName,
 	}, nil
 }
+
+func FindBy(db *gorm.DB, key string, value string) (*User, error) {
+	var user User
+	if err := db.Find(&user, key+" = ?", value).Error; err != nil {
+		return nil, err
+	}
+	return &User{
+		ID:                user.ID,
+		Email:             user.Email,
+		ScreenID:          user.ScreenID,
+		ScreenName:        user.ScreenName,
+		EncryptedPassword: user.EncryptedPassword,
+	}, nil
+}

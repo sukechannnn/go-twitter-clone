@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sukechannnn/go-twitter-clone/graph/generated"
 	"github.com/sukechannnn/go-twitter-clone/graph/model"
@@ -19,7 +20,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	return model.FindById(r.DB, id)
+	user := ForContext(ctx)
+	if user == nil {
+		return &model.User{}, fmt.Errorf("access denied")
+	}
+	return user, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
