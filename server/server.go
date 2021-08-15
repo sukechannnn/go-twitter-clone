@@ -9,17 +9,20 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/sukechannnn/go-twitter-clone/graph"
 	"github.com/sukechannnn/go-twitter-clone/graph/generated"
+	db "github.com/sukechannnn/go-twitter-clone/infrastructure"
 )
 
 const defaultPort = "8080"
 
 func main() {
+	db := db.ConnectDb()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

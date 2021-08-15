@@ -2,12 +2,16 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type NewUser struct {
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	ScreenID   string `json:"screen_id"`
+	ScreenName string `json:"screen_name"`
 }
 
 type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID         string `json:"id"`
+	Email      string `json:"email"`
+	ScreenID   string `json:"screen_id"`
+	ScreenName string `json:"screen_name"`
 }
