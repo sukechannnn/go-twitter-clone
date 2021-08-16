@@ -9,8 +9,16 @@ type User {
   screenName: String!
 }
 
+type FollowUser {
+  id: ID!
+  userId: String!
+  followerId: String!
+}
+
 type Query {
   user(id: ID!): User!
+  followUsers: [User!]!
+  followers: [User!]!
 }
 
 input NewUser {
