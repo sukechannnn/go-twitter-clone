@@ -5,8 +5,8 @@
 type User {
   id: ID!
   email: String!
-  screen_id: String!
-  screen_name: String!
+  screenId: String!
+  screenName: String!
 }
 
 type Query {
@@ -16,8 +16,8 @@ type Query {
 input NewUser {
   email: String!
   password: String!
-  screen_id: String!
-  screen_name: String!
+  screenId: String!
+  screenName: String!
 }
 
 type Mutation {

@@ -119,14 +119,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.ID(childComplexity), true
 
-	case "User.screen_id":
+	case "User.screenId":
 		if e.complexity.User.ScreenID == nil {
 			break
 		}
 
 		return e.complexity.User.ScreenID(childComplexity), true
 
-	case "User.screen_name":
+	case "User.screenName":
 		if e.complexity.User.ScreenName == nil {
 			break
 		}
@@ -204,8 +204,8 @@ var sources = []*ast.Source{
 type User {
   id: ID!
   email: String!
-  screen_id: String!
-  screen_name: String!
+  screenId: String!
+  screenName: String!
 }
 
 type Query {
@@ -215,8 +215,8 @@ type Query {
 input NewUser {
   email: String!
   password: String!
-  screen_id: String!
-  screen_name: String!
+  screenId: String!
+  screenName: String!
 }
 
 type Mutation {
@@ -538,7 +538,7 @@ func (ec *executionContext) _User_email(ctx context.Context, field graphql.Colle
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_screen_id(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_screenId(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -573,7 +573,7 @@ func (ec *executionContext) _User_screen_id(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_screen_name(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_screenName(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1717,18 +1717,18 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 			if err != nil {
 				return it, err
 			}
-		case "screen_id":
+		case "screenId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("screen_id"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("screenId"))
 			it.ScreenID, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "screen_name":
+		case "screenName":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("screen_name"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("screenName"))
 			it.ScreenName, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
@@ -1843,13 +1843,13 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "screen_id":
-			out.Values[i] = ec._User_screen_id(ctx, field, obj)
+		case "screenId":
+			out.Values[i] = ec._User_screenId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "screen_name":
-			out.Values[i] = ec._User_screen_name(ctx, field, obj)
+		case "screenName":
+			out.Values[i] = ec._User_screenName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
