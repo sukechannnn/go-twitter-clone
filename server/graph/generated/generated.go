@@ -44,9 +44,9 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	FollowUser struct {
-		FollowerID func(childComplexity int) int
-		ID         func(childComplexity int) int
-		UserID     func(childComplexity int) int
+		FollowID func(childComplexity int) int
+		ID       func(childComplexity int) int
+		UserID   func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -91,12 +91,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "FollowUser.followerId":
-		if e.complexity.FollowUser.FollowerID == nil {
+	case "FollowUser.followId":
+		if e.complexity.FollowUser.FollowID == nil {
 			break
 		}
 
-		return e.complexity.FollowUser.FollowerID(childComplexity), true
+		return e.complexity.FollowUser.FollowID(childComplexity), true
 
 	case "FollowUser.id":
 		if e.complexity.FollowUser.ID == nil {
@@ -256,7 +256,7 @@ type User {
 type FollowUser {
   id: ID!
   userId: String!
-  followerId: String!
+  followId: String!
 }
 
 type Query {
@@ -436,7 +436,7 @@ func (ec *executionContext) _FollowUser_userId(ctx context.Context, field graphq
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _FollowUser_followerId(ctx context.Context, field graphql.CollectedField, obj *model.FollowUser) (ret graphql.Marshaler) {
+func (ec *executionContext) _FollowUser_followId(ctx context.Context, field graphql.CollectedField, obj *model.FollowUser) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -454,7 +454,7 @@ func (ec *executionContext) _FollowUser_followerId(ctx context.Context, field gr
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.FollowerID, nil
+		return obj.FollowID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1996,8 +1996,8 @@ func (ec *executionContext) _FollowUser(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "followerId":
-			out.Values[i] = ec._FollowUser_followerId(ctx, field, obj)
+		case "followId":
+			out.Values[i] = ec._FollowUser_followId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

@@ -12,7 +12,7 @@ type User {
 type FollowUser {
   id: ID!
   userId: String!
-  followerId: String!
+  followId: String!
 }
 
 type Query {

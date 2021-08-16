@@ -39,7 +39,7 @@ func (r *queryResolver) FollowUsers(ctx context.Context) ([]*model.User, error) 
 
 	var ids []string
 	for _, v := range followUsers {
-		ids = append(ids, v.FollowerID)
+		ids = append(ids, v.FollowID)
 	}
 	var users []*model.User
 	if err := r.DB.Where("id in ?", ids).Find(&users).Error; err != nil {
@@ -49,7 +49,24 @@ func (r *queryResolver) FollowUsers(ctx context.Context) ([]*model.User, error) 
 }
 
 func (r *queryResolver) Followers(ctx context.Context) ([]*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := ForContext(ctx)
+	if user == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+	var followrs []*model.FollowUser
+	if err := r.DB.Where("follow_id = ?", user.ID).Find(&followrs).Error; err != nil {
+		return nil, err
+	}
+
+	var ids []string
+	for _, v := range followrs {
+		ids = append(ids, v.UserID)
+	}
+	var users []*model.User
+	if err := r.DB.Where("id in ?", ids).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
