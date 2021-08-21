@@ -13,6 +13,7 @@ import (
 	"github.com/sukechannnn/go-twitter-clone/graph/generated"
 	"github.com/sukechannnn/go-twitter-clone/graph/model"
 	db "github.com/sukechannnn/go-twitter-clone/infrastructure"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -38,14 +39,19 @@ func authenticate(db *gorm.DB) http.Handler {
 		if err != nil || user == nil {
 			http.Error(w, "Invalid login error", http.StatusForbidden)
 		}
+		pass, _ := model.FindPasswordById(db, user.ID)
+		passwordErr := bcrypt.CompareHashAndPassword([]byte(pass.EncryptedPassword), []byte(signin.Password))
+		if passwordErr != nil {
+			http.Error(w, "Invalid login error", http.StatusForbidden)
+			log.Print(passwordErr)
+		}
 		cookie := http.Cookie{
 			Name:     "auth",
 			Value:    user.ID,
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)
-		signedIn := SignedIn{"ok"}
-		res, _ := json.Marshal(signedIn)
+		res, _ := json.Marshal(SignedIn{"ok"})
 		w.Write(res)
 	})
 }
