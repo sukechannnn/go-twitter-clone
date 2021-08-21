@@ -7,6 +7,7 @@ type User {
   email: String!
   screenId: String!
   screenName: String!
+  following: Boolean!
 }
 
 type FollowUser {
@@ -16,6 +17,7 @@ type FollowUser {
 }
 
 type Query {
+  allUsers: [User!]!
   user(id: ID!): User!
   followUsers: [User!]!
   followers: [User!]!

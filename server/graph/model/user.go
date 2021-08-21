@@ -20,9 +20,44 @@ type User struct {
 	Email             string `json:"email"`
 	ScreenID          string `json:"screenId"`
 	ScreenName        string `json:"screenName"`
+	Following         bool   `json:"Following"`
 	EncryptedPassword string
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
+}
+
+func AllUsers(db *gorm.DB, userId string) ([]*User, error) {
+	var allUsers []*User
+	subQuery := db.Select("user_id", "follow_id").Where("user_id = ?", userId).Table("follow_users")
+	rows, err := db.Model(&User{}).Select("users.id, users.screen_id, users.screen_name, f.follow_id").Joins("left join (?) as f on f.follow_id = users.id", subQuery).Where("users.id != ?", userId).Rows()
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var (
+			id         string
+			screenId   string
+			screenName string
+			followId   *string
+			following  bool
+		)
+		err := rows.Scan(&id, &screenId, &screenName, &followId)
+		if err != nil {
+			return nil, err
+		}
+		if followId != nil {
+			following = true
+		} else {
+			following = false
+		}
+		allUsers = append(allUsers, &User{
+			ID:         id,
+			ScreenID:   screenId,
+			ScreenName: screenName,
+			Following:  following,
+		})
+	}
+	return allUsers, nil
 }
 
 func CreateUser(db *gorm.DB, input NewUser) (string, error) {
