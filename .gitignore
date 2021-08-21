@@ -17,6 +17,8 @@
 
 /tmp/*
 !/tmp/.keep
+/server/tmp/*
+!/server/tmp/.keep
 
 ### Go Patch ###
 /vendor/
