@@ -8,6 +8,7 @@ type User {
   screenId: String!
   screenName: String!
   following: Boolean!
+  createdAt: Time!
 }
 
 type FollowUser {
@@ -38,3 +39,5 @@ type Mutation {
   createUser(input: NewUser!): User!
   followUser(input: NewFollowUser!): FollowUser!
 }
+
+scalar Time
