@@ -18,7 +18,7 @@ type contextKey struct {
 
 // TODO: セッションカラムを追加して、User.id を直接見ないようにする
 func validateAndGetUserID(db *gorm.DB, userId string) (*model.User, error) {
-	user, err := model.FindById(db, userId)
+	user, err := model.FindUserById(db, userId)
 	if err != nil {
 		return nil, err
 	}

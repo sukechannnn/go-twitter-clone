@@ -44,7 +44,7 @@ func CreateUser(db *gorm.DB, input NewUser) (string, error) {
 	return id.String(), nil
 }
 
-func FindById(db *gorm.DB, id string) (*User, error) {
+func FindUserById(db *gorm.DB, id string) (*User, error) {
 	var user User
 	if err := db.Find(&user, "id = ?", id).Error; err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func FindById(db *gorm.DB, id string) (*User, error) {
 	}, nil
 }
 
-func FindBy(db *gorm.DB, key string, value string) (*User, error) {
+func FindUserBy(db *gorm.DB, key string, value string) (*User, error) {
 	var user User
 	if err := db.Find(&user, key+" = ?", value).Error; err != nil {
 		return nil, err

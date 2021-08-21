@@ -16,13 +16,13 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	if err != nil {
 		return nil, err
 	}
-	return model.FindById(r.DB, id)
+	return model.FindUserById(r.DB, id)
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
 	user := ForContext(ctx)
 	if user == nil {
-		return &model.User{}, fmt.Errorf("access denied")
+		return nil, fmt.Errorf("access denied")
 	}
 	return user, nil
 }
