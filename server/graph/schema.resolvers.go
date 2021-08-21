@@ -19,6 +19,18 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	return model.FindUserById(r.DB, id)
 }
 
+func (r *mutationResolver) FollowUser(ctx context.Context, input model.NewFollowUser) (*model.FollowUser, error) {
+	user := ForContext(ctx)
+	if user == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+	id, err := model.CreateFollowUser(r.DB, input, user.ID)
+	if err != nil {
+		return nil, err
+	}
+	return model.FindFollowUserById(r.DB, id)
+}
+
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
 	user := ForContext(ctx)
 	if user == nil {

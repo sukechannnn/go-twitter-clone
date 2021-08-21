@@ -28,6 +28,11 @@ input NewUser {
   screenName: String!
 }
 
+input NewFollowUser {
+  followId: String!
+}
+
 type Mutation {
   createUser(input: NewUser!): User!
+  followUser(input: NewFollowUser!): FollowUser!
 }
