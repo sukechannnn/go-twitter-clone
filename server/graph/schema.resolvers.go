@@ -89,6 +89,27 @@ func (r *queryResolver) Followers(ctx context.Context) ([]*model.User, error) {
 	return users, nil
 }
 
+func (r *queryResolver) Timeline(ctx context.Context) ([]*model.Post, error) {
+	user := ForContext(ctx)
+	if user == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+	var followUsers []*model.FollowUser
+	if err := r.DB.Where("user_id = ?", user.ID).Find(&followUsers).Error; err != nil {
+		return nil, err
+	}
+
+	var ids []string
+	for _, v := range followUsers {
+		ids = append(ids, v.FollowID)
+	}
+	var posts []*model.Post
+	if err := r.DB.Where("user_id in ?", ids).Find(&posts).Error; err != nil {
+		return nil, err
+	}
+	return posts, nil
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 

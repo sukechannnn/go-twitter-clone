@@ -17,11 +17,19 @@ type FollowUser {
   followId: String!
 }
 
+type Post {
+  id: ID!
+  userId: String!
+  text: String!
+  createdAt: Time!
+}
+
 type Query {
   allUsers: [User!]!
   user(id: ID!): User!
   followUsers: [User!]!
   followers: [User!]!
+  timeline: [Post!]!
 }
 
 input NewUser {
