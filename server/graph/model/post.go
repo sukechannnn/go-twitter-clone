@@ -14,6 +14,14 @@ type Post struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
+type PostInfo struct {
+	ID        string    `json:"id"`
+	UserID    string    `json:"userId"`
+	Text      string    `json:"text"`
+	ScreenID  string    `json:"screenId"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
 type NewPost struct {
 	Text string `json:"text"`
 }
@@ -30,11 +38,9 @@ func (r *PostRepository) FindById(id string) (*Post, error) {
 	return &post, nil
 }
 
-func (r *PostRepository) Timeline(userIds []string) ([]*Post, error) {
-	var posts []*Post
-	if err := r.DB.Order("created_at desc").Where("user_id in ?", userIds).Find(&posts).Error; err != nil {
-		return nil, err
-	}
+func (r *PostRepository) Timeline(userIds []string) ([]*PostInfo, error) {
+	var posts []*PostInfo
+	r.DB.Order("posts.created_at desc").Model(&Post{}).Select("posts.id, posts.user_id, posts.text, posts.created_at, users.screen_id").Joins("left join users on users.id = posts.user_id").Where("posts.user_id in ?", userIds).Find(&posts)
 	return posts, nil
 }
 

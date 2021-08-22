@@ -103,7 +103,7 @@ func (r *queryResolver) Followers(ctx context.Context) ([]*model.User, error) {
 	return userRepo.FindByIds(ids)
 }
 
-func (r *queryResolver) Timeline(ctx context.Context) ([]*model.Post, error) {
+func (r *queryResolver) Timeline(ctx context.Context) ([]*model.PostInfo, error) {
 	user := ForContext(ctx)
 	if user == nil {
 		return nil, fmt.Errorf("access denied")
