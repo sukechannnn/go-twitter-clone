@@ -108,6 +108,24 @@ func (r *UserRepository) FindById(id string) (*User, error) {
 	}, nil
 }
 
+func (r *UserRepository) FindByIds(ids []string) ([]*User, error) {
+	var users []*User
+	if err := r.DB.Where("id in ?", ids).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	var rUsers []*User
+	for _, u := range users {
+		rUsers = append(rUsers, &User{
+			ID:         u.ID,
+			Email:      u.Email,
+			ScreenID:   u.ScreenID,
+			ScreenName: u.ScreenName,
+			CreatedAt:  u.CreatedAt,
+		})
+	}
+	return rUsers, nil
+}
+
 func (r *UserRepository) FindBy(key string, value string) (*User, error) {
 	var user User
 	if err := r.DB.Find(&user, key+" = ?", value).Error; err != nil {

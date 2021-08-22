@@ -43,11 +43,7 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) 
 	if err != nil {
 		return nil, err
 	}
-	var post model.Post
-	if err := r.DB.Find(&post, "id = ?", id).Error; err != nil {
-		return nil, err
-	}
-	return &post, nil
+	return postRepo.FindById(id)
 }
 
 func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.UserInfo, error) {
@@ -72,8 +68,10 @@ func (r *queryResolver) FollowUsers(ctx context.Context) ([]*model.User, error) 
 	if user == nil {
 		return nil, fmt.Errorf("access denied")
 	}
+	fUserRepo := model.FollowUserRepository{DB: r.DB}
 	var followUsers []*model.FollowUser
-	if err := r.DB.Where("user_id = ?", user.ID).Find(&followUsers).Error; err != nil {
+	followUsers, err := fUserRepo.FollowUsers(user.ID)
+	if err != nil {
 		return nil, err
 	}
 
@@ -81,11 +79,8 @@ func (r *queryResolver) FollowUsers(ctx context.Context) ([]*model.User, error) 
 	for _, v := range followUsers {
 		ids = append(ids, v.FollowID)
 	}
-	var users []*model.User
-	if err := r.DB.Where("id in ?", ids).Find(&users).Error; err != nil {
-		return nil, err
-	}
-	return users, nil
+	userRepo := model.UserRepository{DB: r.DB}
+	return userRepo.FindByIds(ids)
 }
 
 func (r *queryResolver) Followers(ctx context.Context) ([]*model.User, error) {
@@ -93,8 +88,10 @@ func (r *queryResolver) Followers(ctx context.Context) ([]*model.User, error) {
 	if user == nil {
 		return nil, fmt.Errorf("access denied")
 	}
+	fUserRepo := model.FollowUserRepository{DB: r.DB}
 	var followrs []*model.FollowUser
-	if err := r.DB.Where("follow_id = ?", user.ID).Find(&followrs).Error; err != nil {
+	followrs, err := fUserRepo.Followers(user.ID)
+	if err != nil {
 		return nil, err
 	}
 
@@ -102,11 +99,8 @@ func (r *queryResolver) Followers(ctx context.Context) ([]*model.User, error) {
 	for _, v := range followrs {
 		ids = append(ids, v.UserID)
 	}
-	var users []*model.User
-	if err := r.DB.Where("id in ?", ids).Find(&users).Error; err != nil {
-		return nil, err
-	}
-	return users, nil
+	userRepo := model.UserRepository{DB: r.DB}
+	return userRepo.FindByIds(ids)
 }
 
 func (r *queryResolver) Timeline(ctx context.Context) ([]*model.Post, error) {
@@ -114,8 +108,10 @@ func (r *queryResolver) Timeline(ctx context.Context) ([]*model.Post, error) {
 	if user == nil {
 		return nil, fmt.Errorf("access denied")
 	}
+	fUserRepo := model.FollowUserRepository{DB: r.DB}
 	var followUsers []*model.FollowUser
-	if err := r.DB.Where("user_id = ?", user.ID).Find(&followUsers).Error; err != nil {
+	followUsers, err := fUserRepo.FollowUsers(user.ID)
+	if err != nil {
 		return nil, err
 	}
 
@@ -123,11 +119,8 @@ func (r *queryResolver) Timeline(ctx context.Context) ([]*model.Post, error) {
 	for _, v := range followUsers {
 		ids = append(ids, v.FollowID)
 	}
-	var posts []*model.Post
-	if err := r.DB.Where("user_id in ?", ids).Find(&posts).Error; err != nil {
-		return nil, err
-	}
-	return posts, nil
+	postRepo := model.PostRepository{DB: r.DB}
+	return postRepo.Timeline(ids)
 }
 
 // Mutation returns generated.MutationResolver implementation.

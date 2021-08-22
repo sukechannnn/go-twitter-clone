@@ -49,3 +49,19 @@ func (r *FollowUserRepository) FindById(id string) (*FollowUser, error) {
 		CreatedAt: followUser.CreatedAt,
 	}, nil
 }
+
+func (r *FollowUserRepository) FollowUsers(userId string) ([]*FollowUser, error) {
+	var followUsers []*FollowUser
+	if err := r.DB.Where("user_id = ?", userId).Find(&followUsers).Error; err != nil {
+		return nil, err
+	}
+	return followUsers, nil
+}
+
+func (r *FollowUserRepository) Followers(userId string) ([]*FollowUser, error) {
+	var followers []*FollowUser
+	if err := r.DB.Where("follow_id = ?", userId).Find(&followers).Error; err != nil {
+		return nil, err
+	}
+	return followers, nil
+}

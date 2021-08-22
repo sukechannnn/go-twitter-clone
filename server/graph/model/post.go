@@ -22,6 +22,22 @@ type PostRepository struct {
 	DB *gorm.DB
 }
 
+func (r *PostRepository) FindById(id string) (*Post, error) {
+	var post Post
+	if err := r.DB.Find(&post, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &post, nil
+}
+
+func (r *PostRepository) Timeline(userIds []string) ([]*Post, error) {
+	var posts []*Post
+	if err := r.DB.Order("created_at desc").Where("user_id in ?", userIds).Find(&posts).Error; err != nil {
+		return nil, err
+	}
+	return posts, nil
+}
+
 func (r *PostRepository) Create(input NewPost, userId string) (string, error) {
 	id, _ := uuid.NewRandom()
 
