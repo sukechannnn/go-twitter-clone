@@ -39,7 +39,7 @@ type UserRepository struct {
 	DB *gorm.DB
 }
 
-func (r *UserRepository) AllUsers(userId string) ([]*UserInfo, error) {
+func (r *UserRepository) All(userId string) ([]*UserInfo, error) {
 	var allUsers []*UserInfo
 	subQuery := r.DB.Select("user_id", "follow_id").Where("user_id = ?", userId).Table("follow_users")
 	rows, err := r.DB.Model(&User{}).Select("users.id, users.screen_id, users.screen_name, users.created_at, f.follow_id").Joins("left join (?) as f on f.follow_id = users.id", subQuery).Where("users.id != ?", userId).Rows()
@@ -75,7 +75,7 @@ func (r *UserRepository) AllUsers(userId string) ([]*UserInfo, error) {
 	return allUsers, nil
 }
 
-func (r *UserRepository) CreateUser(input NewUser) (string, error) {
+func (r *UserRepository) Create(input NewUser) (string, error) {
 	id, _ := uuid.NewRandom()
 	hash, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
 
@@ -94,7 +94,7 @@ func (r *UserRepository) CreateUser(input NewUser) (string, error) {
 	return id.String(), nil
 }
 
-func (r *UserRepository) FindUserById(id string) (*User, error) {
+func (r *UserRepository) FindById(id string) (*User, error) {
 	var user User
 	if err := r.DB.Find(&user, "id = ?", id).Error; err != nil {
 		return nil, err
@@ -108,7 +108,7 @@ func (r *UserRepository) FindUserById(id string) (*User, error) {
 	}, nil
 }
 
-func (r *UserRepository) FindUserBy(key string, value string) (*User, error) {
+func (r *UserRepository) FindBy(key string, value string) (*User, error) {
 	var user User
 	if err := r.DB.Find(&user, key+" = ?", value).Error; err != nil {
 		return nil, err

@@ -22,7 +22,7 @@ type FollowUserRepository struct {
 	DB *gorm.DB
 }
 
-func (r *FollowUserRepository) CreateFollowUser(input NewFollowUser, userId string) (string, error) {
+func (r *FollowUserRepository) Create(input NewFollowUser, userId string) (string, error) {
 	id, _ := uuid.NewRandom()
 
 	newFollowUser := FollowUser{
@@ -37,7 +37,7 @@ func (r *FollowUserRepository) CreateFollowUser(input NewFollowUser, userId stri
 	return id.String(), nil
 }
 
-func (r *FollowUserRepository) FindFollowUserById(id string) (*FollowUser, error) {
+func (r *FollowUserRepository) FindById(id string) (*FollowUser, error) {
 	var followUser FollowUser
 	if err := r.DB.Find(&followUser, "id = ?", id).Error; err != nil {
 		return nil, err

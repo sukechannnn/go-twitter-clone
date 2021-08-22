@@ -36,7 +36,7 @@ func authenticate(db *gorm.DB) http.Handler {
 		var signin SignIn
 		json.Unmarshal(body, &signin)
 		userRepo := model.UserRepository{DB: db}
-		user, err := userRepo.FindUserBy("email", signin.Email)
+		user, err := userRepo.FindBy("email", signin.Email)
 		if err != nil || user == nil {
 			http.Error(w, "Invalid login error", http.StatusForbidden)
 		}

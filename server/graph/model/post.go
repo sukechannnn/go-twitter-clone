@@ -22,7 +22,7 @@ type PostRepository struct {
 	DB *gorm.DB
 }
 
-func (r *PostRepository) CreatePost(input NewPost, userId string) (string, error) {
+func (r *PostRepository) Create(input NewPost, userId string) (string, error) {
 	id, _ := uuid.NewRandom()
 
 	newPost := Post{
