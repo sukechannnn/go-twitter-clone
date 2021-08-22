@@ -43,9 +43,14 @@ input NewFollowUser {
   followId: String!
 }
 
+input NewPost {
+  text: String!
+}
+
 type Mutation {
   createUser(input: NewUser!): User!
   followUser(input: NewFollowUser!): FollowUser!
+  createPost(input: NewPost!): Post!
 }
 
 scalar Time
