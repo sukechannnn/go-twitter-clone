@@ -18,7 +18,11 @@ type NewFollowUser struct {
 	FollowID string `json:"followId"`
 }
 
-func CreateFollowUser(db *gorm.DB, input NewFollowUser, userId string) (string, error) {
+type FollowUserRepository struct {
+	DB *gorm.DB
+}
+
+func (r *FollowUserRepository) CreateFollowUser(input NewFollowUser, userId string) (string, error) {
 	id, _ := uuid.NewRandom()
 
 	newFollowUser := FollowUser{
@@ -27,15 +31,15 @@ func CreateFollowUser(db *gorm.DB, input NewFollowUser, userId string) (string, 
 		FollowID:  input.FollowID,
 		CreatedAt: time.Now(),
 	}
-	if err := db.Create(&newFollowUser).Error; err != nil {
+	if err := r.DB.Create(&newFollowUser).Error; err != nil {
 		return "", err
 	}
 	return id.String(), nil
 }
 
-func FindFollowUserById(db *gorm.DB, id string) (*FollowUser, error) {
+func (r *FollowUserRepository) FindFollowUserById(id string) (*FollowUser, error) {
 	var followUser FollowUser
-	if err := db.Find(&followUser, "id = ?", id).Error; err != nil {
+	if err := r.DB.Find(&followUser, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &FollowUser{

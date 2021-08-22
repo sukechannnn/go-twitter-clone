@@ -18,7 +18,11 @@ type NewPost struct {
 	Text string `json:"text"`
 }
 
-func CreatePost(db *gorm.DB, input NewPost, userId string) (string, error) {
+type PostRepository struct {
+	DB *gorm.DB
+}
+
+func (r *PostRepository) CreatePost(input NewPost, userId string) (string, error) {
 	id, _ := uuid.NewRandom()
 
 	newPost := Post{
@@ -27,7 +31,7 @@ func CreatePost(db *gorm.DB, input NewPost, userId string) (string, error) {
 		Text:      input.Text,
 		CreatedAt: time.Now(),
 	}
-	if err := db.Create(&newPost).Error; err != nil {
+	if err := r.DB.Create(&newPost).Error; err != nil {
 		return "", err
 	}
 	return id.String(), nil

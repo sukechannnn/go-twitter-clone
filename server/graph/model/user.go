@@ -20,16 +20,29 @@ type User struct {
 	Email             string `json:"email"`
 	ScreenID          string `json:"screenId"`
 	ScreenName        string `json:"screenName"`
-	Following         bool   `json:"Following"`
 	EncryptedPassword string
 	CreatedAt         time.Time `json:"CreatedAt"`
 	UpdatedAt         time.Time
 }
 
-func AllUsers(db *gorm.DB, userId string) ([]*User, error) {
-	var allUsers []*User
-	subQuery := db.Select("user_id", "follow_id").Where("user_id = ?", userId).Table("follow_users")
-	rows, err := db.Model(&User{}).Select("users.id, users.screen_id, users.screen_name, users.created_at, f.follow_id").Joins("left join (?) as f on f.follow_id = users.id", subQuery).Where("users.id != ?", userId).Rows()
+type UserInfo struct {
+	ID         string    `json:"id"`
+	Email      string    `json:"email"`
+	ScreenID   string    `json:"screenId"`
+	ScreenName string    `json:"screenName"`
+	Following  bool      `json:"Following"`
+	CreatedAt  time.Time `json:"CreatedAt"`
+	UpdatedAt  time.Time
+}
+
+type UserRepository struct {
+	DB *gorm.DB
+}
+
+func (r *UserRepository) AllUsers(userId string) ([]*UserInfo, error) {
+	var allUsers []*UserInfo
+	subQuery := r.DB.Select("user_id", "follow_id").Where("user_id = ?", userId).Table("follow_users")
+	rows, err := r.DB.Model(&User{}).Select("users.id, users.screen_id, users.screen_name, users.created_at, f.follow_id").Joins("left join (?) as f on f.follow_id = users.id", subQuery).Where("users.id != ?", userId).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +64,7 @@ func AllUsers(db *gorm.DB, userId string) ([]*User, error) {
 		} else {
 			following = false
 		}
-		allUsers = append(allUsers, &User{
+		allUsers = append(allUsers, &UserInfo{
 			ID:         id,
 			ScreenID:   screenId,
 			ScreenName: screenName,
@@ -62,7 +75,7 @@ func AllUsers(db *gorm.DB, userId string) ([]*User, error) {
 	return allUsers, nil
 }
 
-func CreateUser(db *gorm.DB, input NewUser) (string, error) {
+func (r *UserRepository) CreateUser(input NewUser) (string, error) {
 	id, _ := uuid.NewRandom()
 	hash, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
 
@@ -75,15 +88,15 @@ func CreateUser(db *gorm.DB, input NewUser) (string, error) {
 		CreatedAt:         time.Now(),
 		UpdatedAt:         time.Now(),
 	}
-	if err := db.Create(&newUser).Error; err != nil {
+	if err := r.DB.Create(&newUser).Error; err != nil {
 		return "", err
 	}
 	return id.String(), nil
 }
 
-func FindUserById(db *gorm.DB, id string) (*User, error) {
+func (r *UserRepository) FindUserById(id string) (*User, error) {
 	var user User
-	if err := db.Find(&user, "id = ?", id).Error; err != nil {
+	if err := r.DB.Find(&user, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &User{
@@ -95,9 +108,9 @@ func FindUserById(db *gorm.DB, id string) (*User, error) {
 	}, nil
 }
 
-func FindUserBy(db *gorm.DB, key string, value string) (*User, error) {
+func (r *UserRepository) FindUserBy(key string, value string) (*User, error) {
 	var user User
-	if err := db.Find(&user, key+" = ?", value).Error; err != nil {
+	if err := r.DB.Find(&user, key+" = ?", value).Error; err != nil {
 		return nil, err
 	}
 	return &User{
@@ -109,9 +122,9 @@ func FindUserBy(db *gorm.DB, key string, value string) (*User, error) {
 	}, nil
 }
 
-func FindPasswordById(db *gorm.DB, id string) (*User, error) {
+func (r *UserRepository) FindPasswordById(id string) (*User, error) {
 	var user User
-	if err := db.Find(&user, "id = ?", id).Error; err != nil {
+	if err := r.DB.Find(&user, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &User{

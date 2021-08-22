@@ -12,11 +12,12 @@ import (
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	id, err := model.CreateUser(r.DB, input)
+	userRepo := model.UserRepository{DB: r.DB}
+	id, err := userRepo.CreateUser(input)
 	if err != nil {
 		return nil, err
 	}
-	return model.FindUserById(r.DB, id)
+	return userRepo.FindUserById(id)
 }
 
 func (r *mutationResolver) FollowUser(ctx context.Context, input model.NewFollowUser) (*model.FollowUser, error) {
@@ -24,11 +25,12 @@ func (r *mutationResolver) FollowUser(ctx context.Context, input model.NewFollow
 	if user == nil {
 		return nil, fmt.Errorf("access denied")
 	}
-	id, err := model.CreateFollowUser(r.DB, input, user.ID)
+	fUserRepo := model.FollowUserRepository{DB: r.DB}
+	id, err := fUserRepo.CreateFollowUser(input, user.ID)
 	if err != nil {
 		return nil, err
 	}
-	return model.FindFollowUserById(r.DB, id)
+	return fUserRepo.FindFollowUserById(id)
 }
 
 func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) (*model.Post, error) {
@@ -36,7 +38,8 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) 
 	if user == nil {
 		return nil, fmt.Errorf("access denied")
 	}
-	id, err := model.CreatePost(r.DB, input, user.ID)
+	postRepo := model.PostRepository{DB: r.DB}
+	id, err := postRepo.CreatePost(input, user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -47,12 +50,13 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) 
 	return &post, nil
 }
 
-func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.User, error) {
+func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.UserInfo, error) {
 	user := ForContext(ctx)
 	if user == nil {
 		return nil, fmt.Errorf("access denied")
 	}
-	return model.AllUsers(r.DB, user.ID)
+	userRepo := model.UserRepository{DB: r.DB}
+	return userRepo.AllUsers(user.ID)
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {

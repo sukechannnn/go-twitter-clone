@@ -7,6 +7,14 @@ type User {
   email: String!
   screenId: String!
   screenName: String!
+  createdAt: Time!
+}
+
+type UserInfo {
+  id: ID!
+  email: String!
+  screenId: String!
+  screenName: String!
   following: Boolean!
   createdAt: Time!
 }
@@ -25,7 +33,7 @@ type Post {
 }
 
 type Query {
-  allUsers: [User!]!
+  allUsers: [UserInfo!]!
   user(id: ID!): User!
   followUsers: [User!]!
   followers: [User!]!

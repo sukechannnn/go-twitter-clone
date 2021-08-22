@@ -74,6 +74,14 @@ type ComplexityRoot struct {
 	User struct {
 		CreatedAt  func(childComplexity int) int
 		Email      func(childComplexity int) int
+		ID         func(childComplexity int) int
+		ScreenID   func(childComplexity int) int
+		ScreenName func(childComplexity int) int
+	}
+
+	UserInfo struct {
+		CreatedAt  func(childComplexity int) int
+		Email      func(childComplexity int) int
 		Following  func(childComplexity int) int
 		ID         func(childComplexity int) int
 		ScreenID   func(childComplexity int) int
@@ -87,7 +95,7 @@ type MutationResolver interface {
 	CreatePost(ctx context.Context, input model.NewPost) (*model.Post, error)
 }
 type QueryResolver interface {
-	AllUsers(ctx context.Context) ([]*model.User, error)
+	AllUsers(ctx context.Context) ([]*model.UserInfo, error)
 	User(ctx context.Context, id string) (*model.User, error)
 	FollowUsers(ctx context.Context) ([]*model.User, error)
 	Followers(ctx context.Context) ([]*model.User, error)
@@ -248,13 +256,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Email(childComplexity), true
 
-	case "User.following":
-		if e.complexity.User.Following == nil {
-			break
-		}
-
-		return e.complexity.User.Following(childComplexity), true
-
 	case "User.id":
 		if e.complexity.User.ID == nil {
 			break
@@ -275,6 +276,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.ScreenName(childComplexity), true
+
+	case "UserInfo.createdAt":
+		if e.complexity.UserInfo.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.CreatedAt(childComplexity), true
+
+	case "UserInfo.email":
+		if e.complexity.UserInfo.Email == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.Email(childComplexity), true
+
+	case "UserInfo.following":
+		if e.complexity.UserInfo.Following == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.Following(childComplexity), true
+
+	case "UserInfo.id":
+		if e.complexity.UserInfo.ID == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.ID(childComplexity), true
+
+	case "UserInfo.screenId":
+		if e.complexity.UserInfo.ScreenID == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.ScreenID(childComplexity), true
+
+	case "UserInfo.screenName":
+		if e.complexity.UserInfo.ScreenName == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.ScreenName(childComplexity), true
 
 	}
 	return 0, false
@@ -349,6 +392,14 @@ type User {
   email: String!
   screenId: String!
   screenName: String!
+  createdAt: Time!
+}
+
+type UserInfo {
+  id: ID!
+  email: String!
+  screenId: String!
+  screenName: String!
   following: Boolean!
   createdAt: Time!
 }
@@ -367,7 +418,7 @@ type Post {
 }
 
 type Query {
-  allUsers: [User!]!
+  allUsers: [UserInfo!]!
   user(id: ID!): User!
   followUsers: [User!]!
   followers: [User!]!
@@ -918,9 +969,9 @@ func (ec *executionContext) _Query_allUsers(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.User)
+	res := resTmp.([]*model.UserInfo)
 	fc.Result = res
-	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserInfo2ᚕᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐUserInfoᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_user(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1281,7 +1332,7 @@ func (ec *executionContext) _User_screenName(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_following(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1290,6 +1341,181 @@ func (ec *executionContext) _User_following(ctx context.Context, field graphql.C
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_id(ctx context.Context, field graphql.CollectedField, obj *model.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_email(ctx context.Context, field graphql.CollectedField, obj *model.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_screenId(ctx context.Context, field graphql.CollectedField, obj *model.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ScreenID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_screenName(ctx context.Context, field graphql.CollectedField, obj *model.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ScreenName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserInfo_following(ctx context.Context, field graphql.CollectedField, obj *model.UserInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserInfo",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1316,7 +1542,7 @@ func (ec *executionContext) _User_following(ctx context.Context, field graphql.C
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _UserInfo_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.UserInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1324,7 +1550,7 @@ func (ec *executionContext) _User_createdAt(ctx context.Context, field graphql.C
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "User",
+		Object:     "UserInfo",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2781,13 +3007,60 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "createdAt":
+			out.Values[i] = ec._User_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var userInfoImplementors = []string{"UserInfo"}
+
+func (ec *executionContext) _UserInfo(ctx context.Context, sel ast.SelectionSet, obj *model.UserInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userInfoImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UserInfo")
+		case "id":
+			out.Values[i] = ec._UserInfo_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "email":
+			out.Values[i] = ec._UserInfo_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "screenId":
+			out.Values[i] = ec._UserInfo_screenId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "screenName":
+			out.Values[i] = ec._UserInfo_screenName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "following":
-			out.Values[i] = ec._User_following(ctx, field, obj)
+			out.Values[i] = ec._UserInfo_following(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "createdAt":
-			out.Values[i] = ec._User_createdAt(ctx, field, obj)
+			out.Values[i] = ec._UserInfo_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3236,6 +3509,53 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtw
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNUserInfo2ᚕᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐUserInfoᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserInfo) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNUserInfo2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐUserInfo(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNUserInfo2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐUserInfo(ctx context.Context, sel ast.SelectionSet, v *model.UserInfo) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._UserInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

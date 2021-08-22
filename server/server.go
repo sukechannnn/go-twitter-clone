@@ -35,11 +35,12 @@ func authenticate(db *gorm.DB) http.Handler {
 		r.Body.Read(body)
 		var signin SignIn
 		json.Unmarshal(body, &signin)
-		user, err := model.FindUserBy(db, "email", signin.Email)
+		userRepo := model.UserRepository{DB: db}
+		user, err := userRepo.FindUserBy("email", signin.Email)
 		if err != nil || user == nil {
 			http.Error(w, "Invalid login error", http.StatusForbidden)
 		}
-		pass, _ := model.FindPasswordById(db, user.ID)
+		pass, _ := userRepo.FindPasswordById(user.ID)
 		passwordErr := bcrypt.CompareHashAndPassword([]byte(pass.EncryptedPassword), []byte(signin.Password))
 		if passwordErr != nil {
 			http.Error(w, "Invalid login error", http.StatusForbidden)
