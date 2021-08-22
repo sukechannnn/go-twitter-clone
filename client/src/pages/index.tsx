@@ -1,5 +1,5 @@
-import { Box, chakra } from "@chakra-ui/react";
 import React from "react";
+import { Box, chakra } from "@chakra-ui/react";
 
 export default function HomePage() {
   return (
