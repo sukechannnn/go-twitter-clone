@@ -115,7 +115,7 @@ func (r *queryResolver) Timeline(ctx context.Context) ([]*model.Post, error) {
 		return nil, err
 	}
 
-	var ids []string
+	ids := []string{user.ID}
 	for _, v := range followUsers {
 		ids = append(ids, v.FollowID)
 	}
