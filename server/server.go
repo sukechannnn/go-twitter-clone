@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
+	"github.com/rs/cors"
 	"github.com/sukechannnn/go-twitter-clone/graph"
 	"github.com/sukechannnn/go-twitter-clone/graph/generated"
 	"github.com/sukechannnn/go-twitter-clone/graph/model"
@@ -73,6 +74,7 @@ func main() {
 	router.Handle("/query", srv)
 	router.Handle("/sign_in", authenticate(db))
 
+	handler := cors.Default().Handler(router)
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }

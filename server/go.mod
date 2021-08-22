@@ -15,6 +15,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/pelletier/go-toml v1.9.3 // indirect
+	github.com/rs/cors v1.8.0
 	github.com/vektah/gqlparser/v2 v2.1.0 // indirect
 	golang.org/x/crypto v0.0.0-20210813211128-0a44fdfbc16e // indirect
 	golang.org/x/sys v0.0.0-20210820121016-41cdb8703e55 // indirect
