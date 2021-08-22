@@ -39,12 +39,12 @@ func authenticate(db *gorm.DB) http.Handler {
 		userRepo := model.UserRepository{DB: db}
 		user, err := userRepo.FindBy("email", signin.Email)
 		if err != nil || user == nil {
-			http.Error(w, "Invalid login error", http.StatusForbidden)
+			http.Error(w, "Invalid login error", http.StatusUnauthorized)
 		}
 		pass, _ := userRepo.FindPasswordById(user.ID)
 		passwordErr := bcrypt.CompareHashAndPassword([]byte(pass.EncryptedPassword), []byte(signin.Password))
 		if passwordErr != nil {
-			http.Error(w, "Invalid login error", http.StatusForbidden)
+			http.Error(w, "Invalid login error", http.StatusUnauthorized)
 			log.Print(passwordErr)
 		}
 		cookie := http.Cookie{
