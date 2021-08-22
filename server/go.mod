@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/99designs/gqlgen v0.13.0 // indirect
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/auth0/go-jwt-middleware v1.0.1
 	github.com/cosmtrek/air v1.27.3 // indirect
 	github.com/creack/pty v1.1.14 // indirect
