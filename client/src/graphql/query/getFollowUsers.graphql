@@ -1,0 +1,6 @@
+query getFollowUsers {
+  followUsers {
+    id
+    email
+  }
+}

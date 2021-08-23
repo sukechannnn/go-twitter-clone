@@ -117,6 +117,16 @@ export type FollowUserMutationVariables = Exact<{
 
 export type FollowUserMutation = { __typename?: 'Mutation', followUser: { __typename?: 'FollowUser', id: string, followId: string, userId: string } };
 
+export type GetFollowUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFollowUsersQuery = { __typename?: 'Query', followUsers: Array<{ __typename?: 'User', id: string, email: string }> };
+
+export type RetriveFollowersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RetriveFollowersQuery = { __typename?: 'Query', followers: Array<{ __typename?: 'User', id: string, email: string }> };
+
 export type GetTimelineQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -141,6 +151,22 @@ export const FollowUserDocument = gql`
     id
     followId
     userId
+  }
+}
+    `;
+export const GetFollowUsersDocument = gql`
+    query getFollowUsers {
+  followUsers {
+    id
+    email
+  }
+}
+    `;
+export const RetriveFollowersDocument = gql`
+    query retriveFollowers {
+  followers {
+    id
+    email
   }
 }
     `;
@@ -185,6 +211,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     followUser(variables: FollowUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FollowUserMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<FollowUserMutation>(FollowUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'followUser');
+    },
+    getFollowUsers(variables?: GetFollowUsersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetFollowUsersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetFollowUsersQuery>(GetFollowUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getFollowUsers');
+    },
+    retriveFollowers(variables?: RetriveFollowersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RetriveFollowersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RetriveFollowersQuery>(RetriveFollowersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'retriveFollowers');
     },
     getTimeline(variables?: GetTimelineQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTimelineQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTimelineQuery>(GetTimelineDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTimeline');

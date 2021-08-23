@@ -1,0 +1,6 @@
+query retriveFollowers {
+  followers {
+    id
+    email
+  }
+}
