@@ -12,7 +12,6 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
-  AlertDescription,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/router";

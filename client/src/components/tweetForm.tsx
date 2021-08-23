@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Heading,
-  HStack,
-  Stack,
-  Textarea,
-} from "@chakra-ui/react";
+import { Button, Stack, Textarea } from "@chakra-ui/react";
 import React from "react";
 
 type Props = {
