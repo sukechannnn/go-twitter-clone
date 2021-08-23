@@ -23,6 +23,11 @@ const Home = () => {
 
   const handleButton = (event) => {
     event.preventDefault();
+    sdk
+      .tweet({ text: tweetText })
+      .then(() => sdk.getTimeline().then((res) => setTimeline(res.timeline)));
+    setTweetText("");
+    console.log(timeline);
   };
 
   return (

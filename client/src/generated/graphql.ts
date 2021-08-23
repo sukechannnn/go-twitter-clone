@@ -115,6 +115,13 @@ export type GetTimelineQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTimelineQuery = { __typename?: 'Query', timeline: Array<{ __typename?: 'PostInfo', id: string, userId: string, text: string, screenId: string, createdAt: any }> };
 
+export type TweetMutationVariables = Exact<{
+  text: Scalars['String'];
+}>;
+
+
+export type TweetMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, text: string, createdAt: any, userId: string } };
+
 
 export const GetTimelineDocument = gql`
     query getTimeline {
@@ -124,6 +131,16 @@ export const GetTimelineDocument = gql`
     text
     screenId
     createdAt
+  }
+}
+    `;
+export const TweetDocument = gql`
+    mutation tweet($text: String!) {
+  createPost(input: {text: $text}) {
+    id
+    text
+    createdAt
+    userId
   }
 }
     `;
@@ -137,6 +154,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     getTimeline(variables?: GetTimelineQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTimelineQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTimelineQuery>(GetTimelineDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTimeline');
+    },
+    tweet(variables: TweetMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TweetMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<TweetMutation>(TweetDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'tweet');
     }
   };
 }
