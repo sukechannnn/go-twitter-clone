@@ -1,0 +1,7 @@
+mutation followUser($userId: String!) {
+  followUser(input: { followId: $userId }) {
+    id
+    followId
+    userId
+  }
+} # Write your query or mutation here

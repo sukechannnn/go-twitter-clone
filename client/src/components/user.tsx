@@ -2,13 +2,20 @@ import { Avatar, Box, Button, Heading, HStack, Stack } from "@chakra-ui/react";
 import React from "react";
 
 type Props = {
+  id: string;
   screenId: string;
   screenName: string;
   following: boolean;
+  onClick: (e) => void;
 };
 
-export const User: React.FC<Props> = ({ screenId, screenName, following }) => {
-  const handleButton = () => "";
+export const User: React.FC<Props> = ({
+  id,
+  screenId,
+  screenName,
+  following,
+  onClick,
+}) => {
   return (
     <HStack
       border="1px"
@@ -27,6 +34,7 @@ export const User: React.FC<Props> = ({ screenId, screenName, following }) => {
         </Stack>
       </HStack>
       <Button
+        id={id}
         bg={"green.300"}
         color={"white"}
         _disabled={{
@@ -40,7 +48,7 @@ export const User: React.FC<Props> = ({ screenId, screenName, following }) => {
           },
         }}
         disabled={following}
-        onClick={handleButton}
+        onClick={onClick}
       >
         {following ? "following" : "follow"}
       </Button>

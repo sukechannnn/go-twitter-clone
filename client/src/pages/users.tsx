@@ -1,4 +1,4 @@
-import { chakra, Container, Heading, Stack } from "@chakra-ui/react";
+import { chakra, Container, Heading, Stack, useId } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { SideBar, User } from "src/components";
 import { GraphQLClient } from "graphql-request";
@@ -12,9 +12,17 @@ const sdk = getSdk(client);
 
 const Users: React.FC = () => {
   const [users, setUsers] = useState([]);
+  const [followId, setFollowId] = useState("");
   useEffect(() => {
     sdk.getUsers().then((res) => setUsers(res.allUsers));
   }, []);
+
+  const handleButton = (event) => {
+    event.preventDefault();
+    sdk.followUser({ userId: event.target.id }).then(() => {
+      sdk.getUsers().then((res) => setUsers(res.allUsers));
+    });
+  };
 
   return (
     <SideBar>
@@ -25,9 +33,11 @@ const Users: React.FC = () => {
             {users.map((user) => (
               <User
                 key={user.id}
+                id={user.id}
                 screenId={user.screenId}
                 screenName={user.screenName}
                 following={user.following}
+                onClick={handleButton}
               />
             ))}
           </Stack>

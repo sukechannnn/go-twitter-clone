@@ -27,7 +27,6 @@ const Home: React.FC = () => {
       .tweet({ text: tweetText })
       .then(() => sdk.getTimeline().then((res) => setTimeline(res.timeline)));
     setTweetText("");
-    console.log(timeline);
   };
 
   return (
