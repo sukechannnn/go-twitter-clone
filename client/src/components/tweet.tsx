@@ -18,7 +18,7 @@ export const Tweet: React.FC<Props> = ({ screenId, text }) => {
       <Avatar mr={4} />
       <Stack>
         {" "}
-        <Heading size="sm">{screenId}</Heading>
+        <Heading size="sm">@{screenId}</Heading>
         <Box>{text}</Box>
       </Stack>
     </HStack>

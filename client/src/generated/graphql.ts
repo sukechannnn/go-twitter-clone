@@ -115,6 +115,11 @@ export type GetTimelineQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTimelineQuery = { __typename?: 'Query', timeline: Array<{ __typename?: 'PostInfo', id: string, userId: string, text: string, screenId: string, createdAt: any }> };
 
+export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'UserInfo', id: string, screenId: string, screenName: string, following: boolean }> };
+
 export type TweetMutationVariables = Exact<{
   text: Scalars['String'];
 }>;
@@ -131,6 +136,16 @@ export const GetTimelineDocument = gql`
     text
     screenId
     createdAt
+  }
+}
+    `;
+export const GetUsersDocument = gql`
+    query getUsers {
+  allUsers {
+    id
+    screenId
+    screenName
+    following
   }
 }
     `;
@@ -154,6 +169,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     getTimeline(variables?: GetTimelineQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTimelineQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTimelineQuery>(GetTimelineDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTimeline');
+    },
+    getUsers(variables?: GetUsersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUsersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUsersQuery>(GetUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getUsers');
     },
     tweet(variables: TweetMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TweetMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<TweetMutation>(TweetDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'tweet');
