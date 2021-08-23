@@ -1,0 +1,8 @@
+query getUsers {
+  allUsers {
+    id
+    screenId
+    screenName
+    following
+  }
+}

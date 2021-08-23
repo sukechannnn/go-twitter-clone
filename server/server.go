@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
+	"github.com/rs/cors"
 	"github.com/sukechannnn/go-twitter-clone/graph"
 	"github.com/sukechannnn/go-twitter-clone/graph/generated"
 	"github.com/sukechannnn/go-twitter-clone/graph/model"
@@ -38,12 +39,12 @@ func authenticate(db *gorm.DB) http.Handler {
 		userRepo := model.UserRepository{DB: db}
 		user, err := userRepo.FindBy("email", signin.Email)
 		if err != nil || user == nil {
-			http.Error(w, "Invalid login error", http.StatusForbidden)
+			http.Error(w, "Invalid login error", http.StatusUnauthorized)
 		}
 		pass, _ := userRepo.FindPasswordById(user.ID)
 		passwordErr := bcrypt.CompareHashAndPassword([]byte(pass.EncryptedPassword), []byte(signin.Password))
 		if passwordErr != nil {
-			http.Error(w, "Invalid login error", http.StatusForbidden)
+			http.Error(w, "Invalid login error", http.StatusUnauthorized)
 			log.Print(passwordErr)
 		}
 		cookie := http.Cookie{
@@ -61,6 +62,10 @@ func main() {
 	db := db.ConnectDb()
 	router := chi.NewRouter()
 	router.Use(graph.Middleware(db))
+	router.Use(cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowCredentials: true,
+	}).Handler)
 
 	port := os.Getenv("PORT")
 	if port == "" {

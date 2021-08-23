@@ -40,7 +40,7 @@ func Middleware(db *gorm.DB) func(http.Handler) http.Handler {
 
 			user, err := validateAndGetUserID(db, c.Value)
 			if err != nil || user == nil {
-				http.Error(w, "Invalid", http.StatusForbidden)
+				http.Error(w, "Invalid", http.StatusUnauthorized)
 				return
 			}
 

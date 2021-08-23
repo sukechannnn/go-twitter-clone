@@ -1,0 +1,8 @@
+mutation tweet($text: String!) {
+  createPost(input: { text: $text }) {
+    id
+    text
+    createdAt
+    userId
+  }
+}

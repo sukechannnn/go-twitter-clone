@@ -63,6 +63,14 @@ type ComplexityRoot struct {
 		UserID    func(childComplexity int) int
 	}
 
+	PostInfo struct {
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		ScreenID  func(childComplexity int) int
+		Text      func(childComplexity int) int
+		UserID    func(childComplexity int) int
+	}
+
 	Query struct {
 		AllUsers    func(childComplexity int) int
 		FollowUsers func(childComplexity int) int
@@ -99,7 +107,7 @@ type QueryResolver interface {
 	User(ctx context.Context, id string) (*model.User, error)
 	FollowUsers(ctx context.Context) ([]*model.User, error)
 	Followers(ctx context.Context) ([]*model.User, error)
-	Timeline(ctx context.Context) ([]*model.Post, error)
+	Timeline(ctx context.Context) ([]*model.PostInfo, error)
 }
 
 type executableSchema struct {
@@ -201,6 +209,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Post.UserID(childComplexity), true
+
+	case "PostInfo.createdAt":
+		if e.complexity.PostInfo.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.PostInfo.CreatedAt(childComplexity), true
+
+	case "PostInfo.id":
+		if e.complexity.PostInfo.ID == nil {
+			break
+		}
+
+		return e.complexity.PostInfo.ID(childComplexity), true
+
+	case "PostInfo.screenId":
+		if e.complexity.PostInfo.ScreenID == nil {
+			break
+		}
+
+		return e.complexity.PostInfo.ScreenID(childComplexity), true
+
+	case "PostInfo.text":
+		if e.complexity.PostInfo.Text == nil {
+			break
+		}
+
+		return e.complexity.PostInfo.Text(childComplexity), true
+
+	case "PostInfo.userId":
+		if e.complexity.PostInfo.UserID == nil {
+			break
+		}
+
+		return e.complexity.PostInfo.UserID(childComplexity), true
 
 	case "Query.allUsers":
 		if e.complexity.Query.AllUsers == nil {
@@ -383,7 +426,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "graph/schema.graphqls", Input: `# GraphQL schema example
+	{Name: "../schema.graphql", Input: `# GraphQL schema example
 #
 # https://gqlgen.com/getting-started/
 
@@ -417,12 +460,20 @@ type Post {
   createdAt: Time!
 }
 
+type PostInfo {
+  id: ID!
+  userId: String!
+  text: String!
+  screenId: String!
+  createdAt: Time!
+}
+
 type Query {
   allUsers: [UserInfo!]!
   user(id: ID!): User!
   followUsers: [User!]!
   followers: [User!]!
-  timeline: [Post!]!
+  timeline: [PostInfo!]!
 }
 
 input NewUser {
@@ -939,6 +990,181 @@ func (ec *executionContext) _Post_createdAt(ctx context.Context, field graphql.C
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PostInfo_id(ctx context.Context, field graphql.CollectedField, obj *model.PostInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostInfo_userId(ctx context.Context, field graphql.CollectedField, obj *model.PostInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostInfo_text(ctx context.Context, field graphql.CollectedField, obj *model.PostInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Text, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostInfo_screenId(ctx context.Context, field graphql.CollectedField, obj *model.PostInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ScreenID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostInfo_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.PostInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_allUsers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1116,9 +1342,9 @@ func (ec *executionContext) _Query_timeline(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Post)
+	res := resTmp.([]*model.PostInfo)
 	fc.Result = res
-	return ec.marshalNPost2ᚕᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPostᚄ(ctx, field.Selections, res)
+	return ec.marshalNPostInfo2ᚕᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPostInfoᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2876,6 +3102,53 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
+var postInfoImplementors = []string{"PostInfo"}
+
+func (ec *executionContext) _PostInfo(ctx context.Context, sel ast.SelectionSet, obj *model.PostInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, postInfoImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PostInfo")
+		case "id":
+			out.Values[i] = ec._PostInfo_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "userId":
+			out.Values[i] = ec._PostInfo_userId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "text":
+			out.Values[i] = ec._PostInfo_text(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "screenId":
+			out.Values[i] = ec._PostInfo_screenId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._PostInfo_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var queryImplementors = []string{"Query"}
 
 func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3383,7 +3656,17 @@ func (ec *executionContext) marshalNPost2githubᚗcomᚋsukechannnnᚋgoᚑtwitt
 	return ec._Post(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPost2ᚕᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPostᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Post) graphql.Marshaler {
+func (ec *executionContext) marshalNPost2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPost(ctx context.Context, sel ast.SelectionSet, v *model.Post) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Post(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPostInfo2ᚕᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPostInfoᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.PostInfo) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -3407,7 +3690,7 @@ func (ec *executionContext) marshalNPost2ᚕᚖgithubᚗcomᚋsukechannnnᚋgo�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPost2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPost(ctx, sel, v[i])
+			ret[i] = ec.marshalNPostInfo2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPostInfo(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3420,14 +3703,14 @@ func (ec *executionContext) marshalNPost2ᚕᚖgithubᚗcomᚋsukechannnnᚋgo�
 	return ret
 }
 
-func (ec *executionContext) marshalNPost2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPost(ctx context.Context, sel ast.SelectionSet, v *model.Post) graphql.Marshaler {
+func (ec *executionContext) marshalNPostInfo2ᚖgithubᚗcomᚋsukechannnnᚋgoᚑtwitterᚑcloneᚋgraphᚋmodelᚐPostInfo(ctx context.Context, sel ast.SelectionSet, v *model.PostInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._Post(ctx, sel, v)
+	return ec._PostInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

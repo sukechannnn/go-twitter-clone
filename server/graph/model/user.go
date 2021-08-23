@@ -128,7 +128,7 @@ func (r *UserRepository) FindByIds(ids []string) ([]*User, error) {
 
 func (r *UserRepository) FindBy(key string, value string) (*User, error) {
 	var user User
-	if err := r.DB.Find(&user, key+" = ?", value).Error; err != nil {
+	if err := r.DB.Debug().Find(&user, key+" = ?", value).Error; err != nil {
 		return nil, err
 	}
 	return &User{

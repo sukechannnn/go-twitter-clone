@@ -32,12 +32,20 @@ type Post {
   createdAt: Time!
 }
 
+type PostInfo {
+  id: ID!
+  userId: String!
+  text: String!
+  screenId: String!
+  createdAt: Time!
+}
+
 type Query {
   allUsers: [UserInfo!]!
   user(id: ID!): User!
   followUsers: [User!]!
   followers: [User!]!
-  timeline: [Post!]!
+  timeline: [PostInfo!]!
 }
 
 input NewUser {

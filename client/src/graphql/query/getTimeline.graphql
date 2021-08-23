@@ -1,0 +1,9 @@
+query getTimeline {
+  timeline {
+    id
+    userId
+    text
+    screenId
+    createdAt
+  }
+}
