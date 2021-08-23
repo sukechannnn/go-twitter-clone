@@ -8,12 +8,6 @@
 # Setup DB
 $ docker-compose up -d
 $ bin/setup_db
-
-# Install sql-migrate before execute below
-$ sql-migrate up
-
-# Install seed data
-$ bin/seed_db
 ```
 
 ### Up server
@@ -23,6 +17,12 @@ Open terminal and execute below.
 ```
 $ cd server
 $ go run server.go
+
+# Install sql-migrate before execute below
+$ sql-migrate up
+
+# Install seed data
+$ ../bin/seed_db
 ```
 
 ### Up client
@@ -51,3 +51,4 @@ then you can see tweet.
 - ログイン機能をセッション ID を使うようにする
 - Dockerize する
 - Monorepo っぽく build できるようにする（makefile + shell）
+- Client のホスティング
