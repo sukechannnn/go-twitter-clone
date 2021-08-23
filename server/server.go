@@ -65,7 +65,6 @@ func main() {
 	router.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowCredentials: true,
-		// Debug:            true,
 	}).Handler)
 
 	port := os.Getenv("PORT")
@@ -79,12 +78,6 @@ func main() {
 	router.Handle("/query", srv)
 	router.Handle("/sign_in", authenticate(db))
 
-	// handler := cors.Default().Handler(router)
-	// c := cors.New(cors.Options{
-	// 	AllowedOrigins:   []string{"http://localhost:3000"},
-	// 	AllowCredentials: true,
-	// })
-	// handler = c.Handler(handler)
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }

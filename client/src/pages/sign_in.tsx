@@ -38,14 +38,15 @@ const SignIn: React.FC = () => {
   const handleButton = (event) => {
     event.preventDefault();
     const data = { email: email, password: password };
-    const param = {
+    fetch("http://localhost:8080/sign_in", {
+      mode: "cors",
+      credentials: "include",
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
       },
       body: JSON.stringify(data),
-    };
-    fetch("http://localhost:8080/sign_in", param).then((res) => {
+    }).then((res) => {
       res.ok
         ? router.replace("/")
         : setvalidationMessage("ログイン情報が間違っています");
