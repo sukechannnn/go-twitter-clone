@@ -19,6 +19,7 @@
 !/tmp/.keep
 /server/tmp/*
 !/server/tmp/.keep
+/server/app.yaml
 
 ### Go Patch ###
 /vendor/

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	"github.com/rs/cors"
+	migrate "github.com/rubenv/sql-migrate"
 	"github.com/sukechannnn/go-twitter-clone/graph"
 	"github.com/sukechannnn/go-twitter-clone/graph/generated"
 	"github.com/sukechannnn/go-twitter-clone/graph/model"
@@ -58,8 +60,22 @@ func authenticate(db *gorm.DB) http.Handler {
 	})
 }
 
+func migration(db *gorm.DB) {
+	migrations := &migrate.FileMigrationSource{
+		Dir: "./db/migrations",
+	}
+	dbDb, _ := db.DB()
+	n, err := migrate.Exec(dbDb, "postgres", migrations, migrate.Up)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Applied %d migrations!\n", n)
+}
+
 func main() {
 	db := db.ConnectDb()
+	migration(db)
+
 	router := chi.NewRouter()
 	router.Use(graph.Middleware(db))
 	router.Use(cors.New(cors.Options{
