@@ -8,7 +8,13 @@ type Props = {
 
 export const Tweet: React.FC<Props> = ({ screenId, text }) => {
   return (
-    <HStack border="1px" borderRadius="md" borderColor="gray.200" p={4}>
+    <HStack
+      border="1px"
+      borderRadius="md"
+      borderColor="gray.200"
+      p={4}
+      bg="white"
+    >
       <Avatar mr={4} />
       <Stack>
         {" "}

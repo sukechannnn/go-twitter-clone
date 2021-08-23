@@ -9,7 +9,13 @@ type Props = {
 
 export const TweetForm: React.FC<Props> = ({ text, onChange, onClick }) => {
   return (
-    <Stack border="1px" borderRadius="md" borderColor="gray.200" p={4}>
+    <Stack
+      border="1px"
+      borderRadius="md"
+      borderColor="gray.200"
+      p={4}
+      bg="white"
+    >
       <Textarea
         value={text}
         onChange={onChange}
