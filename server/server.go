@@ -62,6 +62,11 @@ func main() {
 	db := db.ConnectDb()
 	router := chi.NewRouter()
 	router.Use(graph.Middleware(db))
+	router.Use(cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowCredentials: true,
+		// Debug:            true,
+	}).Handler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -74,7 +79,12 @@ func main() {
 	router.Handle("/query", srv)
 	router.Handle("/sign_in", authenticate(db))
 
-	handler := cors.Default().Handler(router)
+	// handler := cors.Default().Handler(router)
+	// c := cors.New(cors.Options{
+	// 	AllowedOrigins:   []string{"http://localhost:3000"},
+	// 	AllowCredentials: true,
+	// })
+	// handler = c.Handler(handler)
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, handler))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
