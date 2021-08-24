@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,7 +10,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	"github.com/rs/cors"
-	migrate "github.com/rubenv/sql-migrate"
 	"github.com/sukechannnn/go-twitter-clone/graph"
 	"github.com/sukechannnn/go-twitter-clone/graph/generated"
 	"github.com/sukechannnn/go-twitter-clone/graph/model"
@@ -60,24 +58,12 @@ func authenticate(db *gorm.DB) http.Handler {
 	})
 }
 
-func migration(db *gorm.DB) {
-	migrations := &migrate.FileMigrationSource{
-		Dir: "./db/migrations",
-	}
-	dbDb, _ := db.DB()
-	n, err := migrate.Exec(dbDb, "postgres", migrations, migrate.Up)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Applied %d migrations!\n", n)
-}
-
 func main() {
-	db := db.ConnectDb()
-	migration(db)
+	dbConn := db.ConnectDb()
+	db.Migration(dbConn)
 
 	router := chi.NewRouter()
-	router.Use(graph.Middleware(db))
+	router.Use(graph.Middleware(dbConn))
 	router.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowCredentials: true,
@@ -88,11 +74,11 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: dbConn}}))
 
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
-	router.Handle("/sign_in", authenticate(db))
+	router.Handle("/sign_in", authenticate(dbConn))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, router))

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	migrate "github.com/rubenv/sql-migrate"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -32,4 +33,16 @@ func ConnectDb() *gorm.DB {
 		panic(err)
 	}
 	return db
+}
+
+func Migration(db *gorm.DB) {
+	migrations := &migrate.FileMigrationSource{
+		Dir: "./db/migrations",
+	}
+	dbDb, _ := db.DB()
+	n, err := migrate.Exec(dbDb, "postgres", migrations, migrate.Up)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Applied %d migrations!\n", n)
 }
